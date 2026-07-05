@@ -99,6 +99,41 @@ async function deepseek(): Promise<ApiUsage> {
   };
 }
 
+async function glm(): Promise<ApiUsage> {
+  if (!process.env.GLM_API_KEY) return manualApi("glm");
+  const host = process.env.GLM_API_HOST || "open.bigmodel.cn";
+  const headers: Record<string, string> = { Authorization: `Bearer ${process.env.GLM_API_KEY}` };
+  if (process.env.GLM_ORG_ID) headers["Bigmodel-Organization"] = process.env.GLM_ORG_ID;
+  if (process.env.GLM_PROJECT_ID) headers["Bigmodel-Project"] = process.env.GLM_PROJECT_ID;
+
+  const res = await fetch(`https://${host}/api/monitor/usage/quota/limit`, { headers, cache: "no-store" });
+  const json = await res.json().catch(() => null);
+  if (!res.ok || json?.success === false || (json?.code && json.code !== 200)) {
+    throw new Error(json?.msg || json?.message || `${res.status} ${res.statusText}`);
+  }
+
+  const limits = json?.data?.limits ?? [];
+  const primary = limits.find((item: { type?: string }) => item.type === "TOKENS_LIMIT") ?? limits[0];
+  const planName = json?.data?.planName ?? json?.data?.plan ?? json?.data?.plan_type ?? json?.data?.packageName;
+
+  return {
+    // GLM Coding Plan has no public wallet-balance endpoint; this is token/time quota, not a CNY balance.
+    balance: null,
+    currency: "CNY",
+    spent: null,
+    ok: true,
+    note: planName ? `GLM Coding Plan (${planName})` : "GLM Coding Plan quota",
+    details: primary
+      ? {
+          used: primary.usage,
+          limit: primary.number,
+          remaining: primary.remaining,
+          percentage: primary.percentage,
+        }
+      : undefined,
+  };
+}
+
 async function qwen(): Promise<ApiUsage> {
   const data = await queryAliyunAccountBalance();
   if (!data) return manualApi("qwen");
@@ -130,9 +165,10 @@ async function safe(name: string, fn: () => Promise<ApiUsage>) {
 }
 
 export async function getUsage() {
-  const [kimiApi, deepseekApi, qwenApi] = await Promise.all([
+  const [kimiApi, deepseekApi, glmApi, qwenApi] = await Promise.all([
     safe("kimi", kimi),
     safe("deepseek", deepseek),
+    safe("glm", glm),
     safe("qwen", qwen),
   ]);
 
@@ -146,7 +182,7 @@ export async function getUsage() {
     api: {
       kimi: kimiApi,
       deepseek: deepseekApi,
-      glm: manualApi("glm"),
+      glm: glmApi,
       qwen: qwenApi,
     },
   };

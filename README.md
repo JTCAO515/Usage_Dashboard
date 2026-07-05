@@ -25,8 +25,13 @@ Optional automatic balance checks:
 - `DEEPSEEK_API_KEY`: DeepSeek balance
 - `ALIYUN_ACCESS_KEY_ID`: Aliyun RAM AccessKey for Qwen/DashScope account balance
 - `ALIYUN_ACCESS_KEY_SECRET`: Aliyun RAM AccessKey secret for Qwen/DashScope account balance
+- `GLM_API_KEY`: Zhipu BigModel API key for Coding Plan quota
+- `GLM_API_HOST` (optional): defaults to `open.bigmodel.cn`; use `api.z.ai` for the global region
+- `GLM_ORG_ID` / `GLM_PROJECT_ID` (optional): required only for BigModel team-scoped quota
 
 For the Aliyun key, grant the RAM user permission for `QueryAccountBalance` (`bss:DescribeAcccount`). The value shown is the Aliyun account balance from BSS OpenAPI, not DashScope-only token spend.
+
+GLM has no public wallet-balance API. `GLM_API_KEY` reads the Coding Plan token/time quota (`/api/monitor/usage/quota/limit`) instead — `balance`/`spent` stay empty and the quota shows up in `note`/`details`.
 
 Manual values for providers without a wired public endpoint:
 
