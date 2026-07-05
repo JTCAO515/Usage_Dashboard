@@ -1,0 +1,281 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --text: #17202a;
+  --muted: #6b7280;
+  --line: #dfe3e8;
+  --accent: #216e5f;
+  --accent-2: #285e8e;
+  --danger: #b42318;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  background: var(--text);
+  color: white;
+  min-height: 44px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+
+.login {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.loginBox {
+  width: min(100%, 360px);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.loginBox h1,
+.topbar h1,
+.panel h2 {
+  margin: 0;
+}
+
+.loginBox input {
+  width: 100%;
+  margin: 18px 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.loginBox button {
+  width: 100%;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 18px 0 28px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.topbar p,
+.apiRow p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.panelHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.panelHead h2 {
+  font-size: 16px;
+}
+
+.panelHead span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.meter + .meter {
+  margin-top: 14px;
+}
+
+.meterText {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.track {
+  height: 9px;
+  background: #edf0f3;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.track div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+.apiPanel,
+.envPanel {
+  margin-top: 12px;
+}
+
+.apiList {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.apiRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px;
+  background: white;
+}
+
+.amounts {
+  min-width: 160px;
+  text-align: right;
+}
+
+.amounts span {
+  display: block;
+  font-weight: 700;
+}
+
+.amounts small {
+  color: var(--muted);
+}
+
+.envPanel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.envPanel .panelHead {
+  width: 100%;
+}
+
+code {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+  padding: 8px 10px;
+  color: #334155;
+  font-size: 13px;
+}
+
+.banner,
+.error {
+  color: var(--danger);
+}
+
+.banner {
+  margin-bottom: 12px;
+  border: 1px solid #f3b3ad;
+  background: #fff4f2;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    width: min(100% - 20px, 520px);
+    padding-top: 14px;
+  }
+
+  .topbar,
+  .apiRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .topbar {
+    gap: 12px;
+  }
+
+  .topbar h1 {
+    font-size: 24px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actions button {
+    flex: 1;
+  }
+
+  .amounts {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .panelHead {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  code {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
