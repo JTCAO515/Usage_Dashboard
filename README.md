@@ -23,6 +23,10 @@ Optional automatic balance checks:
 
 - `MOONSHOT_API_KEY`: Kimi/Moonshot balance
 - `DEEPSEEK_API_KEY`: DeepSeek balance
+- `ALIYUN_ACCESS_KEY_ID`: Aliyun RAM AccessKey for Qwen/DashScope account balance
+- `ALIYUN_ACCESS_KEY_SECRET`: Aliyun RAM AccessKey secret for Qwen/DashScope account balance
+
+For the Aliyun key, grant the RAM user permission for `QueryAccountBalance` (`bss:DescribeAcccount`). The value shown is the Aliyun account balance from BSS OpenAPI, not DashScope-only token spend.
 
 Manual values for providers without a wired public endpoint:
 
@@ -46,4 +50,4 @@ Example:
 
 ## Notes
 
-Codex, Antigravity, and Claude Code 5-hour/weekly usage are manual because a Vercel deployment cannot read local app logs from your devices. Kimi and DeepSeek use server-side API calls when keys are configured; browser code never receives the API keys.
+Codex, Antigravity, and Claude Code 5-hour/weekly usage are manual because a Vercel deployment cannot read local app logs from your devices. Kimi, DeepSeek, and Qwen/DashScope balance use server-side API calls when keys are configured; browser code never receives the API keys.

@@ -1,3 +1,5 @@
+import { queryAliyunAccountBalance } from "./aliyun";
+
 export type SubscriptionUsage = {
   used5h: number;
   limit5h: number;
@@ -97,6 +99,23 @@ async function deepseek(): Promise<ApiUsage> {
   };
 }
 
+async function qwen(): Promise<ApiUsage> {
+  const data = await queryAliyunAccountBalance();
+  if (!data) return manualApi("qwen");
+  return {
+    balance: data.AvailableAmount ? Number(data.AvailableAmount) : null,
+    currency: data.Currency || "CNY",
+    spent: null,
+    ok: true,
+    note: "Aliyun account balance via BSS OpenAPI; not DashScope-only spend.",
+    details: {
+      cash: data.AvailableCashAmount,
+      credit: data.CreditAmount,
+      quotaLimit: data.QuotaLimit,
+    },
+  };
+}
+
 async function safe(name: string, fn: () => Promise<ApiUsage>) {
   try {
     return await fn();
@@ -111,7 +130,11 @@ async function safe(name: string, fn: () => Promise<ApiUsage>) {
 }
 
 export async function getUsage() {
-  const [kimiApi, deepseekApi] = await Promise.all([safe("kimi", kimi), safe("deepseek", deepseek)]);
+  const [kimiApi, deepseekApi, qwenApi] = await Promise.all([
+    safe("kimi", kimi),
+    safe("deepseek", deepseek),
+    safe("qwen", qwen),
+  ]);
 
   return {
     checkedAt: new Date().toISOString(),
@@ -124,7 +147,7 @@ export async function getUsage() {
       kimi: kimiApi,
       deepseek: deepseekApi,
       glm: manualApi("glm"),
-      qwen: manualApi("qwen"),
+      qwen: qwenApi,
     },
   };
 }
